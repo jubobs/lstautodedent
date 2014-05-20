@@ -1,0 +1,276 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2014 by Julien Cretel
+%                       <jubobs.tex at gmail.com>
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%
+%     http://www.latex-project.org/lppl.txt
+%
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% \fi
+%
+% \iffalse
+%<package>\NeedsTeXFormat{LaTeX2e}[2011/06/27]
+%<package>\ProvidesPackage{lstautodedent}
+%<package>  [2014/05/20 v0.1 A package for automatically dedenting listings]
+%
+%<*driver>
+\documentclass[a4paper]{ltxdoc}
+\EnableCrossrefs
+\CodelineIndex
+\RecordChanges
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{xcolor}
+\usepackage{lstdoc}
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+\lstset
+{
+  upquote    = true,
+}
+
+\lstdefinestyle{nonbnoframe}
+{
+  frame   = none,
+  numbers = none,
+}
+
+\newcommand*{\pkg}[1]{\textsf{#1}}
+\newcommand*{\opt}[1]{\texttt{#1}}
+\newcommand\lstaupkg{\textsf{lstautodedent}}
+\newcommand\lstagpkg{\textsf{lstautogobble}}
+\newcommand\lstpkg{\textsf{listings}}
+\makeindex
+
+\begin{document}
+  \DocInput{lstautodedent.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+% \CheckSum{157}
+%
+% \CharacterTable
+%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%   Digits        \0\1\2\3\4\5\6\7\8\9
+%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%   Dollar        \$     Percent       \%     Ampersand     \&
+%   Acute accent  \'     Left paren    \(     Right paren   \)
+%   Asterisk      \*     Plus          \+     Comma         \,
+%   Minus         \-     Point         \.     Solidus       \/
+%   Colon         \:     Semicolon     \;     Less than     \<
+%   Equals        \=     Greater than  \>     Question mark \?
+%   Commercial at \@     Left bracket  \[     Backslash     \\
+%   Right bracket \]     Circumflex    \^     Underscore    \_
+%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%   Right brace   \}     Tilde         \~}
+%
+% \changes{v0.1}{2014/05/20}{Alpha release.}
+%
+% \GetFileInfo{lstautodedent.sty}
+%
+%  ^^A see http://www.latex-project.org/cgi-bin/ltxbugs2html?pr=latex%2F3540
+%  \begingroup
+%    \def\x{\#,\$,\%,\^,\_,\~,\&,\{,\},\/}%^^A
+%    \makeatletter
+%    \@onelevel@sanitize\x
+%  \expandafter\endgroup\expandafter\DoNotIndex\expandafter{\x}
+%
+% \begingroup
+%    \makeatletter
+%    \lccode`9=32\relax
+%    \lowercase{%^^A
+%      \edef\x{\noexpand\DoNotIndex{\@backslashchar9}}%^^A
+%    }%^^A
+%  \expandafter\endgroup\x
+%
+% \DoNotIndex{\@ne,\@tempa}
+% \DoNotIndex{\advance,\afterindent@lstau@false,\afterindent@lstau@true}
+% \DoNotIndex{\begingroup}
+% \DoNotIndex{\count@,\csname}
+% \DoNotIndex{\def}
+% \DoNotIndex{\edef,\else,\endcsname,\endgroup,\expandafter}
+% \DoNotIndex{\fi}
+% \DoNotIndex{\global}
+% \DoNotIndex{\ifnum}
+% \DoNotIndex{\lccode,\let,\loop,\lowercase,\lst@AddToHook,\lst@DefSaveDef,^^A
+%   \lst@DeveloperSCT,\lst@firstline,\lst@ifincluderangemarker,\lst@Key,^^A
+%   \lst@lAddTo,\lstKV@SetIf}
+% \DoNotIndex{\newcommand,\newcount,\newif,\noexpand,\number}
+% \DoNotIndex{\onBasisLine@lstau@false,\onBasisLine@lstau@true}
+% \DoNotIndex{\PostponeCount@lstau@false,\PostponeCount@lstau@true}
+% \DoNotIndex{\relax,\renewcommand,\repeat}
+% \DoNotIndex{\the,\toks@}
+%
+% \title^^A
+% {^^A
+%   The \lstaupkg{} package^^A
+%   \thanks^^A
+%   {^^A
+%     This document corresponds to \lstaupkg~\fileversion,
+%     dated~\filedate.^^A
+%   }^^A
+%  }
+% \author{Julien Cretel\\ \texttt{jubobs.tex at gmail.com}}
+% \date{\filedate}
+% \thispagestyle{empty}
+% \maketitle
+%
+% \begin{abstract}
+% This package is an extension for the \lstpkg{} package.
+% It defines a Boolean key called \rkeyname{autodedent} that automates the
+% removal of unwanted white space at the beginning of each output line in
+% listings.
+% That functionality is compatible with both displayed listings and standalone
+% listings.
+% \end{abstract}
+%
+% \tableofcontents\newpage
+%
+% \makeatletter
+% \renewcommand\index@prologue{\part{Index}\markboth{Index}{Index}}
+% \makeatother
+% \StopEventually{^^A
+%   \clearpage^^A
+%   \PrintChanges^^A
+%   \setcounter{IndexColumns}{2}^^A
+%   \PrintIndex^^A
+% }
+%
+% \part{Implementation}
+%    \begin{macrocode}
+\lst@Key{autodedent}f[t]{\lstKV@SetIf{#1}\ifautodedent@lstau@}
+
+% --- accumulation of tokens ---
+\toks@={
+    \lst@DefSaveDef{`\ }\space@lstau{\processSpace@lstau}
+    %\lst@DefSaveDef{`\^^I}\tab@lstau{\processTab@lstau} % currently not used
+}
+
+
+% --- egreg's helper function for accumulating tokens ---
+\newcommand\add@savedef
+\def\add@savedef#1#2{%
+  \begingroup\lccode`?=#1\relax
+  \lowercase{\endgroup
+    \edef\@tempa{%
+      \noexpand\lst@DefSaveDef{\number#1}%
+      \expandafter\noexpand\csname ?@lstau\endcsname{\noexpand#2%
+      \expandafter\noexpand\csname ?@lstau\endcsname}%
+    }%
+  }%
+  \toks@=\expandafter{\the\expandafter\toks@\@tempa}%
+}
+
+\count@=33
+\loop
+    \add@savedef\count@\processchar@lstau
+  \ifnum\count@<127
+  \advance\count@\@ne
+\repeat
+
+% --- to keep track of the state ---
+\newcount\spacesToGobble@lstau
+\newcount\spacesGobbledSoFar@lstau
+\newif\ifafterindent@lstau@
+\newif\ifonBasisLine@lstau@
+\newif\ifPostponeCount@lstau@
+
+
+\lst@AddToHook{Init}
+{%
+  \ifautodedent@lstau@%
+    % patch hook macros
+    \let\@ddedToInitVarsBOLhook@lstau\@@ddedToInitVarsBOLhook@lstau%
+    \let\@ddedToEOLhook@lstau\@@ddedToEOLhook@lstau%
+    % initialise things
+    \global\onBasisLine@lstau@true%
+    \global\afterindent@lstau@false%
+    \global\spacesToGobble@lstau=0%
+    \lst@ifincluderangemarker%
+      % if firtline option is not used
+      \ifnum9999999=\lst@firstline%
+        \global\PostponeCount@lstau@true%
+      \fi
+    \fi
+  \fi
+}
+
+
+\lst@AddToHook{SelectCharTable}
+{%
+    \ifautodedent@lstau@%
+        \lst@lAddTo\lst@DeveloperSCT{\the\toks@}%
+    \fi
+}
+
+
+\lst@AddToHook{InitVarsBOL}{\@ddedToInitVarsBOLhook@lstau}
+\newcommand\@ddedToInitVarsBOLhook@lstau{}
+\newcommand\@@ddedToInitVarsBOLhook@lstau
+{%
+  \global\afterindent@lstau@false%
+}
+
+\lst@AddToHook{EOL}{\@ddedToEOLhook@lstau}
+\newcommand\@ddedToEOLhook@lstau{}
+\newcommand\@@ddedToEOLhook@lstau
+{%
+  \ifonBasisLine@lstau@%
+    \ifPostponeCount@lstau@%
+    \else
+      \global\onBasisLine@lstau@false%
+    \fi
+  \fi
+  \global\spacesGobbledSoFar@lstau=0%
+  \global\PostponeCount@lstau@false%
+}
+
+\newcommand\@ddedToInitVarsBOLhook@lstau
+\newcommand\@ddedToEOLhook@lstau
+\lst@AddToHook{DeInit}
+{%
+  \ifautodedent@lstau@%
+    % undo patches
+    \renewcommand\@ddedToInitVarsBOLhook@lstau{}%
+    \renewcommand\@ddedToEOLhook@lstau{}%
+  \fi
+}
+
+
+% --- helper macros ---
+\newcommand\processchar@lstau
+{%
+  \global\afterindent@lstau@true%
+}
+
+\newcommand\processSpace@lstau
+{%
+  \ifafterindent@lstau@%
+    \space@lstau%
+  \else
+    \ifonBasisLine@lstau@%
+      \global\advance\spacesToGobble@lstau\@ne\relax%
+    \else
+      \ifnum\spacesGobbledSoFar@lstau<\spacesToGobble@lstau\relax%
+        \global\advance\spacesGobbledSoFar@lstau\@ne\relax%
+      \else
+        \space@lstau%
+      \fi
+    \fi
+  \fi
+}
+%    \end{macrocode}
+%
+% \Finale
+\endinput

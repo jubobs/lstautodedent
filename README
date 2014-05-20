@@ -1,0 +1,11 @@
+lstautodedent package
+
+Copyright 2014--     Julien Cretel
+
+Released under the LaTeX Project Public License 1.3 or later
+
+This package is an extension for the listings package.
+It defines a Boolean key called `autodedent' that automates the removal of
+unwanted white space at the beginning of each output line in listings.
+That functionality is compatible with both displayed listings and standalone
+listings.
