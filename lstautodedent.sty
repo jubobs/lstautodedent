@@ -30,21 +30,21 @@
 \NeedsTeXFormat{LaTeX2e}[2011/06/27]
 \ProvidesPackage{lstautodedent}
   [2014/05/20 v0.1 A package for automatically dedenting listings]
-\lst@Key{autodedent}f[t]{\lstKV@SetIf{#1}\ifautodedent@lstau@}
+\lst@Key{autodedent}f[t]{\lstKV@SetIf{#1}\ifautodedent@lstad@}
 
 \toks@={
-    \lst@DefSaveDef{`\ }\space@lstau{\processSpace@lstau}
-    %\lst@DefSaveDef{`\^^I}\tab@lstau{\processTab@lstau} % currently not used
+    \lst@DefSaveDef{`\ }\space@lstad{\processSpace@lstad}
+    %\lst@DefSaveDef{`\^^I}\tab@lstad{\processTab@lstad} % currently not used
 }
 
-\newcommand\add@savedef
-\def\add@savedef#1#2{%
+\newcommand\add@savedef@lstad{}
+\def\add@savedef@lstad#1#2{%
   \begingroup\lccode`?=#1\relax
   \lowercase{\endgroup
     \edef\@tempa{%
       \noexpand\lst@DefSaveDef{\number#1}%
-      \expandafter\noexpand\csname ?@lstau\endcsname{\noexpand#2%
-      \expandafter\noexpand\csname ?@lstau\endcsname}%
+      \expandafter\noexpand\csname ?@lstad\endcsname{\noexpand#2%
+      \expandafter\noexpand\csname ?@lstad\endcsname}%
     }%
   }%
   \toks@=\expandafter{\the\expandafter\toks@\@tempa}%
@@ -52,31 +52,31 @@
 
 \count@=33
 \loop
-    \add@savedef\count@\processchar@lstau
+    \add@savedef@lstad\count@\processchar@lstad
   \ifnum\count@<127
   \advance\count@\@ne
 \repeat
 
-\newcount\spacesToGobble@lstau
-\newcount\spacesGobbledSoFar@lstau
-\newif\ifafterindent@lstau@
-\newif\ifonBasisLine@lstau@
-\newif\ifPostponeCount@lstau@
+\newcount\spacesToGobble@lstad
+\newcount\spacesGobbledSoFar@lstad
+\newif\ifafterindent@lstad@
+\newif\ifonBasisLine@lstad@
+\newif\ifPostponeCount@lstad@
 
 \lst@AddToHook{Init}
 {%
-  \ifautodedent@lstau@%
+  \ifautodedent@lstad@%
     % patch hook macros
-    \let\@ddedToInitVarsBOLhook@lstau\@@ddedToInitVarsBOLhook@lstau%
-    \let\@ddedToEOLhook@lstau\@@ddedToEOLhook@lstau%
+    \let\@ddedToInitVarsBOLhook@lstad\@@ddedToInitVarsBOLhook@lstad%
+    \let\@ddedToEOLhook@lstad\@@ddedToEOLhook@lstad%
     % initialise things
-    \global\onBasisLine@lstau@true%
-    \global\afterindent@lstau@false%
-    \global\spacesToGobble@lstau=0%
+    \global\onBasisLine@lstad@true%
+    \global\afterindent@lstad@false%
+    \global\spacesToGobble@lstad=0%
     \lst@ifincluderangemarker%
       % if firtline option is not used
       \ifnum9999999=\lst@firstline%
-        \global\PostponeCount@lstau@true%
+        \global\PostponeCount@lstad@true%
       \fi
     \fi
   \fi
@@ -84,60 +84,58 @@
 
 \lst@AddToHook{SelectCharTable}
 {%
-    \ifautodedent@lstau@%
+    \ifautodedent@lstad@%
         \lst@lAddTo\lst@DeveloperSCT{\the\toks@}%
     \fi
 }
 
-\lst@AddToHook{InitVarsBOL}{\@ddedToInitVarsBOLhook@lstau}
-\newcommand\@ddedToInitVarsBOLhook@lstau{}
-\newcommand\@@ddedToInitVarsBOLhook@lstau
+\lst@AddToHook{InitVarsBOL}{\@ddedToInitVarsBOLhook@lstad}
+\newcommand\@ddedToInitVarsBOLhook@lstad{}
+\newcommand\@@ddedToInitVarsBOLhook@lstad
 {%
-  \global\afterindent@lstau@false%
+  \global\afterindent@lstad@false%
 }
 
-\lst@AddToHook{EOL}{\@ddedToEOLhook@lstau}
-\newcommand\@ddedToEOLhook@lstau{}
-\newcommand\@@ddedToEOLhook@lstau
+\lst@AddToHook{EOL}{\@ddedToEOLhook@lstad}
+\newcommand\@ddedToEOLhook@lstad{}
+\newcommand\@@ddedToEOLhook@lstad
 {%
-  \ifonBasisLine@lstau@%
-    \ifPostponeCount@lstau@%
+  \ifonBasisLine@lstad@%
+    \ifPostponeCount@lstad@%
     \else
-      \global\onBasisLine@lstau@false%
+      \global\onBasisLine@lstad@false%
     \fi
   \fi
-  \global\spacesGobbledSoFar@lstau=0%
-  \global\PostponeCount@lstau@false%
+  \global\spacesGobbledSoFar@lstad=0%
+  \global\PostponeCount@lstad@false%
 }
 
-\newcommand\@ddedToInitVarsBOLhook@lstau
-\newcommand\@ddedToEOLhook@lstau
 \lst@AddToHook{DeInit}
 {%
-  \ifautodedent@lstau@%
+  \ifautodedent@lstad@%
     % undo patches
-    \renewcommand\@ddedToInitVarsBOLhook@lstau{}%
-    \renewcommand\@ddedToEOLhook@lstau{}%
+    \renewcommand\@ddedToInitVarsBOLhook@lstad{}%
+    \renewcommand\@ddedToEOLhook@lstad{}%
   \fi
 }
 
-\newcommand\processchar@lstau
+\newcommand\processchar@lstad
 {%
-  \global\afterindent@lstau@true%
+  \global\afterindent@lstad@true%
 }
 
-\newcommand\processSpace@lstau
+\newcommand\processSpace@lstad
 {%
-  \ifafterindent@lstau@%
-    \space@lstau%
+  \ifafterindent@lstad@%
+    \space@lstad%
   \else
-    \ifonBasisLine@lstau@%
-      \global\advance\spacesToGobble@lstau\@ne\relax%
+    \ifonBasisLine@lstad@%
+      \global\advance\spacesToGobble@lstad\@ne\relax%
     \else
-      \ifnum\spacesGobbledSoFar@lstau<\spacesToGobble@lstau\relax%
-        \global\advance\spacesGobbledSoFar@lstau\@ne\relax%
+      \ifnum\spacesGobbledSoFar@lstad<\spacesToGobble@lstad\relax%
+        \global\advance\spacesGobbledSoFar@lstad\@ne\relax%
       \else
-        \space@lstau%
+        \space@lstad%
       \fi
     \fi
   \fi
