@@ -32,7 +32,8 @@
   [2014/05/20 v0.1 A package for automatically dedenting listings]
 \lst@Key{autodedent}f[t]{\lstKV@SetIf{#1}\ifautodedent@lstad@}
 
-\toks@={
+\newtoks\toks@lstad
+\toks@lstad={
     \lst@DefSaveDef{`\ }\space@lstad{\processSpace@lstad}
     %\lst@DefSaveDef{`\^^I}\tab@lstad{\processTab@lstad} % currently not used
 }
@@ -47,7 +48,7 @@
       \expandafter\noexpand\csname ?@lstad\endcsname}%
     }%
   }%
-  \toks@=\expandafter{\the\expandafter\toks@\@tempa}%
+  \toks@lstad=\expandafter{\the\expandafter\toks@lstad\@tempa}%
 }
 
 \count@=33
@@ -85,7 +86,7 @@
 \lst@AddToHook{SelectCharTable}
 {%
     \ifautodedent@lstad@%
-        \lst@lAddTo\lst@DeveloperSCT{\the\toks@}%
+        \lst@lAddTo\lst@DeveloperSCT{\the\toks@lstad}%
     \fi
 }
 

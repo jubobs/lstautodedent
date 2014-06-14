@@ -57,7 +57,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{153}
+% \CheckSum{155}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -110,7 +110,7 @@
 % \DoNotIndex{\onBasisLine@lstad@false,\onBasisLine@lstad@true}
 % \DoNotIndex{\PostponeCount@lstad@false,\PostponeCount@lstad@true}
 % \DoNotIndex{\relax,\renewcommand,\repeat}
-% \DoNotIndex{\the,\toks@}
+% \DoNotIndex{\the}
 %
 % \title^^A
 % {^^A
@@ -152,7 +152,8 @@
 \lst@Key{autodedent}f[t]{\lstKV@SetIf{#1}\ifautodedent@lstad@}
 
 % --- accumulation of tokens ---
-\toks@={
+\newtoks\toks@lstad
+\toks@lstad={
     \lst@DefSaveDef{`\ }\space@lstad{\processSpace@lstad}
     %\lst@DefSaveDef{`\^^I}\tab@lstad{\processTab@lstad} % currently not used
 }
@@ -169,7 +170,7 @@
       \expandafter\noexpand\csname ?@lstad\endcsname}%
     }%
   }%
-  \toks@=\expandafter{\the\expandafter\toks@\@tempa}%
+  \toks@lstad=\expandafter{\the\expandafter\toks@lstad\@tempa}%
 }
 
 \count@=33
@@ -210,7 +211,7 @@
 \lst@AddToHook{SelectCharTable}
 {%
     \ifautodedent@lstad@%
-        \lst@lAddTo\lst@DeveloperSCT{\the\toks@}%
+        \lst@lAddTo\lst@DeveloperSCT{\the\toks@lstad}%
     \fi
 }
 
