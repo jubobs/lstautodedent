@@ -153,8 +153,8 @@
 
 % --- accumulation of tokens ---
 \newtoks\toks@lstad
-\toks@lstad={
-    \lst@DefSaveDef{`\ }\space@lstad{\processSpace@lstad}
+\toks@lstad={%
+    \lst@DefSaveDef{`\ }\space@lstad{\processSpace@lstad}%
     %\lst@DefSaveDef{`\^^I}\tab@lstad{\processTab@lstad} % currently not used
 }
 
@@ -210,18 +210,15 @@
 
 \lst@AddToHook{SelectCharTable}
 {%
-    \ifautodedent@lstad@%
-        \lst@lAddTo\lst@DeveloperSCT{\the\toks@lstad}%
-    \fi
+  \ifautodedent@lstad@%
+    \lst@lAddTo\lst@DeveloperSCT{\the\toks@lstad}%
+  \fi
 }
 
 
 \lst@AddToHook{InitVarsBOL}{\@ddedToInitVarsBOLhook@lstad}
 \newcommand\@ddedToInitVarsBOLhook@lstad{}
-\newcommand\@@ddedToInitVarsBOLhook@lstad
-{%
-  \global\afterindent@lstad@false%
-}
+\newcommand\@@ddedToInitVarsBOLhook@lstad{\global\afterindent@lstad@false}
 
 \lst@AddToHook{EOL}{\@ddedToEOLhook@lstad}
 \newcommand\@ddedToEOLhook@lstad{}
@@ -248,10 +245,7 @@
 
 
 % --- helper macros ---
-\newcommand\processchar@lstad
-{%
-  \global\afterindent@lstad@true%
-}
+\newcommand\processchar@lstad{\global\afterindent@lstad@true}
 
 \newcommand\processSpace@lstad
 {%
