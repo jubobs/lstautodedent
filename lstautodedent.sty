@@ -30,16 +30,26 @@
 \NeedsTeXFormat{LaTeX2e}[2011/06/27]
 \ProvidesPackage{lstautodedent}
   [2014/05/20 v0.1 A package for automatically dedenting listings]
+\RequirePackage{listings}
 \lst@Key{autodedent}f[t]{\lstKV@SetIf{#1}\ifautodedent@lstad@}
 
 \newtoks\toks@lstad
 \toks@lstad={%
     \lst@DefSaveDef{`\ }\space@lstad{\processSpace@lstad}%
-    %\lst@DefSaveDef{`\^^I}\tab@lstad{\processTab@lstad}% currently not used
+    %\lst@DefSaveDef{`\^^I}\tab@lstad{\processTab@lstad} % currently not used
 }
 
 \newcommand\add@savedef@lstad{}
 \def\add@savedef@lstad#1#2{%
+  \begingroup\lccode`?=#1\relax
+  \lowercase{\endgroup
+    \edef\@tempa{%
+      \noexpand\lst@DefSaveDef{\number#1}%
+      \expandafter\noexpand\csname ?@lstad\endcsname{\noexpand#2%
+      \expandafter\noexpand\csname ?@lstad\endcsname}%
+    }%
+  }%
+  \toks@lstad=\expandafter{\the\expandafter\toks@lstad\@tempa}%
 }
 
 \count@=33
@@ -83,8 +93,7 @@
 
 \lst@AddToHook{InitVarsBOL}{\@ddedToInitVarsBOLhook@lstad}
 \newcommand\@ddedToInitVarsBOLhook@lstad{}
-\newcommand\@@ddedToInitVarsBOLhook@lstad
-  {\global\afterindent@lstad@false}
+\newcommand\@@ddedToInitVarsBOLhook@lstad{\global\afterindent@lstad@false}
 
 \lst@AddToHook{EOL}{\@ddedToEOLhook@lstad}
 \newcommand\@ddedToEOLhook@lstad{}
@@ -109,8 +118,7 @@
   \fi
 }
 
-\newcommand\processchar@lstad
-  {\global\afterindent@lstad@true}
+\newcommand\processchar@lstad{\global\afterindent@lstad@true}
 
 \newcommand\processSpace@lstad
 {%
